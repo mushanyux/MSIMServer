@@ -32,9 +32,9 @@ func Configure(opts *Options) {
 
 	infoWriter := zapcore.AddSync(&lumberjack.Logger{
 		Filename:   path.Join(opts.LogDir, "info.log"),
-		MaxSize:    500, // megabytes
+		MaxSize:    500,
 		MaxBackups: 3,
-		MaxAge:     28, // days
+		MaxAge:     28,
 	})
 	core = zapcore.NewCore(
 		zapcore.NewJSONEncoder(newEncoderConfig()),
@@ -49,9 +49,9 @@ func Configure(opts *Options) {
 
 	errorWriter := zapcore.AddSync(&lumberjack.Logger{
 		Filename:   path.Join(opts.LogDir, "error.log"),
-		MaxSize:    500, // megabytes
+		MaxSize:    500,
 		MaxBackups: 3,
-		MaxAge:     28, // days
+		MaxAge:     28,
 	})
 	core = zapcore.NewCore(
 		zapcore.NewJSONEncoder(newEncoderConfig()),
@@ -66,9 +66,9 @@ func Configure(opts *Options) {
 
 	warnWriter := zapcore.AddSync(&lumberjack.Logger{
 		Filename:   path.Join(opts.LogDir, "warn.log"),
-		MaxSize:    500, // megabytes
+		MaxSize:    500,
 		MaxBackups: 3,
-		MaxAge:     28, // days
+		MaxAge:     28,
 	})
 	core = zapcore.NewCore(
 		zapcore.NewJSONEncoder(newEncoderConfig()),
@@ -80,12 +80,10 @@ func Configure(opts *Options) {
 	} else {
 		warnLogger = zap.New(core)
 	}
-
 }
 
 func newEncoderConfig() zapcore.EncoderConfig {
 	return zapcore.EncoderConfig{
-		// Keys can be anything except the empty string.
 		TimeKey:       "time",
 		LevelKey:      "level",
 		NameKey:       "logger",
@@ -93,8 +91,8 @@ func newEncoderConfig() zapcore.EncoderConfig {
 		MessageKey:    "msg",
 		StacktraceKey: "stacktrace",
 		LineEnding:    zapcore.DefaultLineEnding,
-		EncodeLevel:   zapcore.LowercaseLevelEncoder, // 小写编码器
-		EncodeCaller:  zapcore.FullCallerEncoder,     // 全路径编码器
+		EncodeLevel:   zapcore.LowercaseLevelEncoder,
+		EncodeCaller:  zapcore.FullCallerEncoder,
 		EncodeName:    zapcore.FullNameEncoder,
 		EncodeTime: func(t time.Time, enc zapcore.PrimitiveArrayEncoder) {
 			enc.AppendString(t.Format("2006-01-02 15:04:05"))
@@ -104,30 +102,25 @@ func newEncoderConfig() zapcore.EncoderConfig {
 		},
 	}
 }
+
 func timeEncoder(t time.Time, enc zapcore.PrimitiveArrayEncoder) {
 	enc.AppendString(t.Format("2006-01-02 15:04:05.000"))
 }
 
-// Info Info
 func Info(msg string, fields ...zap.Field) {
-
 	if logger == nil {
 		Configure(NewOptions())
 	}
 	logger.Info(msg, fields...)
 }
 
-// Debug Debug
 func Debug(msg string, fields ...zap.Field) {
-
 	if logger == nil {
 		Configure(NewOptions())
 	}
 	logger.Debug(msg, fields...)
-
 }
 
-// Error Error
 func Error(msg string, fields ...zap.Field) {
 	if errorLogger == nil {
 		Configure(NewOptions())
@@ -135,16 +128,13 @@ func Error(msg string, fields ...zap.Field) {
 	errorLogger.Error(msg, fields...)
 }
 
-// Warn Warn
 func Warn(msg string, fields ...zap.Field) {
-
 	if warnLogger == nil {
 		Configure(NewOptions())
 	}
 	warnLogger.Warn(msg, fields...)
 }
 
-// Log Log
 type Log interface {
 	Info(msg string, fields ...zap.Field)
 	Debug(msg string, fields ...zap.Field)
@@ -152,33 +142,26 @@ type Log interface {
 	Warn(msg string, fields ...zap.Field)
 }
 
-// LIMLog TLog
 type TLog struct {
-	prefix string // 日志前缀
+	prefix string
 }
 
-// NewLIMLog NewLIMLog
 func NewTLog(prefix string) *TLog {
-
 	return &TLog{prefix: prefix}
 }
 
-// Info Info
 func (t *TLog) Info(msg string, fields ...zap.Field) {
 	Info(fmt.Sprintf("【%s】%s", t.prefix, msg), fields...)
 }
 
-// Debug Debug
 func (t *TLog) Debug(msg string, fields ...zap.Field) {
 	Debug(fmt.Sprintf("【%s】%s", t.prefix, msg), fields...)
 }
 
-// Error Error
 func (t *TLog) Error(msg string, fields ...zap.Field) {
 	Error(fmt.Sprintf("【%s】%s", t.prefix, msg), fields...)
 }
 
-// Warn Warn
 func (t *TLog) Warn(msg string, fields ...zap.Field) {
 	Warn(fmt.Sprintf("【%s】%s", t.prefix, msg), fields...)
 }

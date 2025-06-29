@@ -53,12 +53,11 @@ func (b byID) Len() int           { return len(b) }
 func (b byID) Swap(i, j int)      { b[i], b[j] = b[j], b[i] }
 func (b byID) Less(i, j int) bool { return b[i].Less(b[j]) }
 
-// FileDirMigrationSource 文件目录源 遇到目录进行递归获取
+// FileDirMigrationSource 文件目录源
 type FileDirMigrationSource struct {
 	Dir string
 }
 
-// FindMigrations FindMigrations
 func (f FileDirMigrationSource) FindMigrations() ([]*migrate.Migration, error) {
 	filesystem := http.Dir(f.Dir)
 	migrations := make([]*migrate.Migration, 0, 100)
@@ -66,14 +65,11 @@ func (f FileDirMigrationSource) FindMigrations() ([]*migrate.Migration, error) {
 	if err != nil {
 		return nil, err
 	}
-	// Make sure migrations are sorted
 	sort.Sort(byID(migrations))
-
 	return migrations, nil
 }
 
 func (f FileDirMigrationSource) findMigrations(dir http.FileSystem, migrations *[]*migrate.Migration) error {
-
 	file, err := dir.Open("/")
 	if err != nil {
 		return err
@@ -85,7 +81,6 @@ func (f FileDirMigrationSource) findMigrations(dir http.FileSystem, migrations *
 	}
 
 	for _, info := range files {
-
 		if strings.HasSuffix(info.Name(), ".sql") {
 			file, err := dir.Open(info.Name())
 			if err != nil {
@@ -94,10 +89,9 @@ func (f FileDirMigrationSource) findMigrations(dir http.FileSystem, migrations *
 
 			migration, err := migrate.ParseMigration(info.Name(), file)
 			if err != nil {
-				return fmt.Errorf("Error while parsing %s: %s", info.Name(), err)
+				return fmt.Errorf("Error while parsing migration %s: %s", info.Name(), err)
 			}
 			*migrations = append(*migrations, migration)
-
 		} else if info.IsDir() {
 			err = f.findMigrations(http.Dir(fmt.Sprintf("%s/%s", f.Dir, info.Name())), migrations)
 			if err != nil {
@@ -105,6 +99,5 @@ func (f FileDirMigrationSource) findMigrations(dir http.FileSystem, migrations *
 			}
 		}
 	}
-
 	return nil
 }

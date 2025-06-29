@@ -38,6 +38,7 @@ func RequestBoyForQueryParam(url string, queryParams map[string]string, headers 
 	}
 	return response, nil
 }
+
 func RequestBoy(url string, body []byte, headers map[string]string, method rest.Method) (resp *rest.Response, err error) {
 	request := rest.Request{
 		Method:  method,
@@ -61,13 +62,12 @@ func Get(url string, queryParams map[string]string, headers map[string]string) (
 	}
 	response, err := rest.API(request)
 	if err != nil {
-
 		return nil, err
 	}
 	return response, nil
 }
 
-func GetJson(url string, queryParams map[string]string, headers map[string]string) (byts []byte, err error) {
+func GetJson(url string, queryParams map[string]string, headers map[string]string) ([]byte, error) {
 	request := rest.Request{
 		Method:      rest.Get,
 		BaseURL:     url,
@@ -76,19 +76,17 @@ func GetJson(url string, queryParams map[string]string, headers map[string]strin
 	}
 	response, err := rest.API(request)
 	if err != nil {
-
 		return nil, err
 	}
 	return []byte(response.Body), nil
 }
 
-func PostForWWWFormForBytres(urlStr string, params map[string]string, headers map[string]string) ([]byte, error) {
+func PostForWWWFormForBytes(urlStr string, params map[string]string, headers map[string]string) ([]byte, error) {
 	data := url.Values{}
 	for key, value := range params {
 		data.Set(key, value)
 	}
 	queryStr := ""
-
 	for key, value := range params {
 		queryStr = fmt.Sprintf("%s=%s&%s", key, value, queryStr)
 	}
@@ -108,11 +106,11 @@ func PostForWWWFormForBytres(urlStr string, params map[string]string, headers ma
 	if err != nil {
 		return nil, err
 	}
+	defer resp.Body.Close()
 	body, err := ioutil.ReadAll(resp.Body)
 	if err != nil {
 		return nil, err
 	}
-
 	if resp.StatusCode != http.StatusOK {
 		return body, errors.New(fmt.Sprintf("状态码：%d", resp.StatusCode))
 	}
@@ -120,7 +118,7 @@ func PostForWWWFormForBytres(urlStr string, params map[string]string, headers ma
 }
 
 func PostForWWWForm(urlStr string, params map[string]string, headers map[string]string) (map[string]interface{}, error) {
-	body, err := PostForWWWFormForBytres(urlStr, params, headers)
+	body, err := PostForWWWFormForBytes(urlStr, params, headers)
 	if err != nil {
 		return nil, err
 	}
@@ -146,11 +144,11 @@ func PostForWWWFormForAll(urlStr string, bodyData io.Reader, headers map[string]
 	if err != nil {
 		return nil, err
 	}
+	defer resp.Body.Close()
 	body, err := ioutil.ReadAll(resp.Body)
 	if err != nil {
 		return nil, err
 	}
-
 	if resp.StatusCode != http.StatusOK {
 		return nil, errors.New(fmt.Sprintf("状态码：%d", resp.StatusCode))
 	}
@@ -158,12 +156,7 @@ func PostForWWWFormForAll(urlStr string, bodyData io.Reader, headers map[string]
 }
 
 func PostForWWWFormReXML(urlStr string, params map[string]string, headers map[string]string) ([]byte, error) {
-	data := url.Values{}
-	for key, value := range params {
-		data.Set(key, value)
-	}
 	queryStr := ""
-
 	for key, value := range params {
 		queryStr = fmt.Sprintf("%s=%s&%s", key, value, queryStr)
 	}
