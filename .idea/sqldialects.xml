@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="SqlDialectMappings">
-    <file url="file://$PROJECT_DIR$/modules/base/sql/app-20201103-01.sql" dialect="GenericSQL" />
-    <file url="file://$PROJECT_DIR$/modules/base/sql/app-20230912-01.sql" dialect="GenericSQL" />
-    <file url="file://$PROJECT_DIR$/modules/base/sql/event-20191106-01.sql" dialect="GenericSQL" />
-    <file url="file://$PROJECT_DIR$/modules/base/sql/event-20250423-01.sql" dialect="GenericSQL" />
+    <file url="file://$PROJECT_DIR$/modules/base/sql/app-20250629-01.sql" dialect="GenericSQL" />
+    <file url="file://$PROJECT_DIR$/modules/base/sql/app-20250629-02.sql" dialect="GenericSQL" />
+    <file url="file://$PROJECT_DIR$/modules/base/sql/event-20250629-01.sql" dialect="GenericSQL" />
+    <file url="file://$PROJECT_DIR$/modules/base/sql/event-20250629-02.sql" dialect="GenericSQL" />
   </component>
 </project>
