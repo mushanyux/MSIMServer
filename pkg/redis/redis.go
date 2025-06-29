@@ -124,7 +124,6 @@ LTRIM key start stop
 当 key 不是列表类型时，返回一个错误。
 */
 func (rc *Conn) Ltrim(key string, start, stop int64) (string, error) {
-
 	return rc.client.LTrim(key, start, stop).Result()
 }
 
@@ -153,7 +152,6 @@ HMGET key field [field ...]
 因为不存在的 key 被当作一个空哈希表来处理，所以对一个不存在的 key 进行 HMGET 操作将返回一个只带有 nil 值的表。
 */
 func (rc *Conn) Hmget(key string, field ...string) ([]string, error) {
-
 	results, err := rc.client.HMGet(key, field...).Result()
 	if err == rd.Nil {
 		return nil, nil
@@ -172,7 +170,6 @@ func (rc *Conn) Hmget(key string, field ...string) ([]string, error) {
 }
 
 func (rc *Conn) Hmset(key string, fieldValues ...string) error {
-
 	if len(fieldValues)%2 != 0 {
 		return errors.New("redis hmset操作失败【fieldValues不能为单数！】")
 	}
@@ -180,7 +177,6 @@ func (rc *Conn) Hmset(key string, fieldValues ...string) error {
 	for i := 0; i < len(fieldValues); i += 2 {
 		fieldValueMap[fieldValues[i]] = fieldValues[i+1]
 	}
-
 	return rc.client.HMSet(key, fieldValueMap).Err()
 }
 
@@ -189,7 +185,6 @@ func (rc *Conn) Hmset(key string, fieldValues ...string) error {
 获取在哈希表中指定 key 的所有字段和值
 */
 func (rc *Conn) Hgetall(key string) (map[string]string, error) {
-
 	m, err := rc.client.HGetAll(key).Result()
 	if err == rd.Nil {
 		return nil, nil
@@ -221,7 +216,6 @@ HINCRBY
 HINCRBY 支持的值的范围限定在 64位 有符号整数
 */
 func (rc *Conn) Hincrby(key, field string, increment int) (int64, error) {
-
 	return rc.client.HIncrBy(key, field, int64(increment)).Result()
 
 }
@@ -234,7 +228,6 @@ SISMEMBER key member
 如果member元素不是key的成员，或者集合key不存在，则返回0
 */
 func (rc *Conn) Sismember(key, member string) (int, error) {
-
 	result, err := rc.client.SIsMember(key, member).Result()
 	if err != nil {
 		return 0, err
@@ -243,7 +236,6 @@ func (rc *Conn) Sismember(key, member string) (int, error) {
 		return 1, nil
 	}
 	return 0, err
-
 }
 
 func (rc *Conn) SAdd(key string, members ...interface{}) error {
@@ -271,7 +263,6 @@ score 值可以是整数值或双精度浮点数。
 当 key 存在但不是有序集类型时，返回一个错误
 */
 func (rc *Conn) ZAdd(key string, scoremember ...interface{}) error {
-
 	members := make([]rd.Z, 0)
 	for i := 0; i < len(scoremember); i = i + 2 {
 		score := scoremember[0].(float64)
@@ -281,7 +272,6 @@ func (rc *Conn) ZAdd(key string, scoremember ...interface{}) error {
 		})
 	}
 	return rc.client.ZAdd(key, members...).Err()
-
 }
 
 func (rc *Conn) ZRem(key string, members ...interface{}) error {
@@ -347,7 +337,6 @@ GEOADD key longitude latitude member [longitude latitude member ...]
 */
 
 func (rc *Conn) GeoAdd(key string, longitude, latitude float64, member string) error {
-
 	return rc.client.GeoAdd(key, &rd.GeoLocation{
 		Name:      member,
 		Longitude: longitude,
@@ -362,7 +351,6 @@ georadius可以根据给定地理位置坐标获取指定范围内的地理位�
 GEORADIUS key longitude latitude radius [m|km|ft|mi] [WITHCOORD] [WITHDIST] [ASC|DESC] [WITHHASH] [COUNT count]
 */
 func (rc *Conn) GeoRadius(key string, longitude, latitude float64, radius float64, unit string, params ...interface{}) ([]rd.GeoLocation, error) {
-
 	return rc.client.GeoRadius(key, longitude, latitude, &rd.GeoRadiusQuery{
 		Radius: radius,
 		Unit:   unit,
@@ -393,7 +381,6 @@ func (rc *Conn) BLPop(key string, timeout time.Duration) (string, error) {
 // BRPOPLPUSH 是 RPOPLPUSH 的阻塞版本。 当 source 包含元素的时候，这个命令表现得跟 RPOPLPUSH 一模一样。 当 source 是空的时候，
 // Redis将会阻塞这个连接，直到另一个客户端 push 元素进入或者达到 timeout 时限。 timeout 为 0 能用于无限期阻塞客户端。
 func (rc *Conn) BRPoplpush(source string, destination string, timeout time.Duration) (string, error) {
-
 	return rc.client.BRPopLPush(source, destination, timeout).Result()
 }
 
