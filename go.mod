@@ -9,8 +9,10 @@ require (
 	github.com/gomarkdown/markdown v0.0.0-20250311123330-531bef5e742b
 	github.com/mattn/go-sqlite3 v1.14.28
 	github.com/rubenv/sql-migrate v1.8.0
+	github.com/sendgrid/rest v2.6.9+incompatible
 	github.com/sourcegraph/syntaxhighlight v0.0.0-20170531221838-bd320f5d308e
 	go.uber.org/zap v1.27.0
+	golang.org/x/crypto v0.37.0
 	gopkg.in/natefinch/lumberjack.v2 v2.2.1
 )
 
@@ -21,4 +23,5 @@ require (
 	github.com/onsi/gomega v1.37.0 // indirect
 	github.com/sourcegraph/annotate v0.0.0-20160123013949-f4cad6c6324d // indirect
 	go.uber.org/multierr v1.10.0 // indirect
+	golang.org/x/net v0.37.0 // indirect
 )
