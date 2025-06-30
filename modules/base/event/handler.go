@@ -51,7 +51,6 @@ func (e *Event) handleEvent(model *Model) {
 
 // 处理群创建事件
 func (e *Event) handleGroupCreateEvent(model *Model) {
-
 	fmt.Println("handleGroupCreateEvent....", model.Event)
 	e.ctx.EventPool.Work <- &pool.Job{
 		Data: model,
@@ -73,7 +72,6 @@ func (e *Event) handleGroupCreateEvent(model *Model) {
 
 // 处理群聊无法添加注销账号事件
 func (e *Event) handleGroupUnableAddDestroyAccount(model *Model) {
-
 	e.ctx.EventPool.Work <- &pool.Job{
 		Data: model,
 		JobFunc: func(id int64, data interface{}) {
@@ -92,7 +90,6 @@ func (e *Event) handleGroupUnableAddDestroyAccount(model *Model) {
 
 // 处理群更新事件
 func (e *Event) handleGroupUpdateEvent(model *Model) {
-
 	e.ctx.EventPool.Work <- &pool.Job{
 		Data: model,
 		JobFunc: func(id int64, data interface{}) {
@@ -113,28 +110,8 @@ func (e *Event) handleGroupUpdateEvent(model *Model) {
 	}
 }
 
-// 处理群成员添加事件
-// func (e *Event) handleGroupMemberAddEvent(model *Model) {
-
-// 	e.ctx.EventPool.Work <- &pool.Job{
-// 		Data: model,
-// 		JobFunc: func(id int64, data interface{}) {
-// 			var model = data.(*Model)
-// 			var req *config.MsgGroupMemberAddReq
-// 			err := util.ReadJsonByByte([]byte(model.Data), &req)
-// 			if err != nil {
-// 				e.Error("解析JSON失败！", zap.Error(err), zap.String("data", model.Data))
-// 				return
-// 			}
-// 			err = e.ctx.SendGroupMemberAdd(req)
-// 			e.updateEventStatus(err, model.VersionLock, model.Id)
-// 		},
-// 	}
-// }
-
 // 处理群成员移除事件
 func (e *Event) handleGroupMemberRemoveEvent(model *Model) {
-
 	e.ctx.EventPool.Work <- &pool.Job{
 		Data: model,
 		JobFunc: func(id int64, data interface{}) {
@@ -153,7 +130,6 @@ func (e *Event) handleGroupMemberRemoveEvent(model *Model) {
 
 // 处理群成头像更新事件
 func (e *Event) handleGroupAvatarUpdateEvent(model *Model) {
-
 	e.ctx.EventPool.Work <- &pool.Job{
 		Data: model,
 		JobFunc: func(id int64, data interface{}) {

@@ -80,10 +80,6 @@ func New(ctx *config.Context) *Event {
 
 // Begin 开启事件
 func (e *Event) Begin(data *et.Data, tx *dbr.Tx) (int64, error) {
-	// if !e.Support(data.Type.Int()) {
-	// 	e.Error("不支持的事件类型！", zap.Int("eventType", data.Type.Int()))
-	// 	return 0, errors.New("不支持的事件类型！")
-	// }
 	eventID, err := e.db.InsertTx(&Model{
 		Event: data.Event,
 		Type:  data.Type.Int(),
@@ -94,19 +90,12 @@ func (e *Event) Begin(data *et.Data, tx *dbr.Tx) (int64, error) {
 
 // Commit 提交事件
 func (e *Event) Commit(eventID int64) {
-
 	eventModel, err := e.db.QueryWithID(eventID)
 	if err != nil {
 		e.Error("查询事件失败！", zap.Error(err), zap.Int64("eventID", eventID))
 		return
 	}
-	// if !e.Support(eventModel.Type) {
-	// 	e.Error("不支持的事件类型！", zap.Int("eventType", eventModel.Type))
-	// 	return
-	// }
-
 	e.handleEvent(eventModel)
-
 }
 
 // Support 是否支持的事件类型
